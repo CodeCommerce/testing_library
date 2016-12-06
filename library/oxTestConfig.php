@@ -484,6 +484,26 @@ class oxTestConfig
     }
 
     /**
+     * Whether to use a clone of the original datbase instead of the original
+     *
+     * @return boolean|null
+     */
+    public function shouldUseDatabaseClone()
+    {
+        return (boolean)$this->getValue('use_database_clone');
+    }
+
+    /**
+     * Whether to delete the cloned database after the tests have run
+     *
+     * @return boolean|null
+     */
+    public function shouldDeleteDatabaseCloneAfterTestsSuite()
+    {
+        return (boolean)$this->getValue('delete_database_clone_after_tests_suite');
+    }
+
+    /**
      * Returns configuration parameter value. First checks if environmental variable is set with the same uppercase name or provided one.
      *
      * @param string $param Parameter name.

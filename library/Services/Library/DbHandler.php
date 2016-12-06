@@ -35,6 +35,7 @@ class DbHandler
      * Initiates class dependencies.
      *
      * @param oxConfigFile $configFile
+     * @param bool $shouldUseClone
      */
     public function __construct($configFile)
     {
@@ -114,6 +115,22 @@ class DbHandler
     }
 
     /**
+     * Creates the database that will receive the dump of the original
+     */
+    public function createDatabaseClone()
+    {
+        $this->query('create database `' . $this->getDbName(true) . '_clone` collate ' . $this->getCharsetMode() . '_general_ci');
+    }
+
+    /**
+     * Drops the database
+     */
+    public function dropDatabase()
+    {
+        $this->query('drop database `' . $this->getDbName() . '`');
+    }
+
+    /**
      * @param string $value
      * @return string
      */
@@ -133,11 +150,19 @@ class DbHandler
     }
 
     /**
+     * @param boolean $useOriginal  force to return the original dbName
+     *
      * @return string
      */
-    public function getDbName()
+    public function getDbName($useOriginal = false)
     {
-        return $this->configFile->dbName;
+        $dbName = $this->configFile->dbName;
+
+        if (!$useOriginal && $this->dbCloneExists()) {
+            $dbName .= '_clone';
+        }
+
+        return $dbName;
     }
 
     /**
@@ -155,6 +180,7 @@ class DbHandler
     {
         return $this->configFile->dbPwd;
     }
+
 
     /**
      * @return string
@@ -184,6 +210,7 @@ class DbHandler
      */
     protected function getImportCommand($fileName, $charsetMode)
     {
+
         $command = 'mysql -h' . escapeshellarg($this->getDbHost());
         $command .= ' -u' . escapeshellarg($this->getDbUser());
         if ($password = $this->getDbPassword()) {
@@ -192,6 +219,8 @@ class DbHandler
         $command .= ' --default-character-set=' . $charsetMode;
         $command .= ' ' .escapeshellarg($this->getDbName());
         $command .= ' < ' . escapeshellarg($fileName) . ' 2>&1';
+
+        echo 'importing ' . $fileName . ' into database ' . $this->getDbName() . "\n";
 
         return $command;
     }
@@ -212,6 +241,8 @@ class DbHandler
         }
         $command .= ' --add-drop-table ' . escapeshellarg($this->getDbName());
         $command .= ' > ' . escapeshellarg($fileName);
+
+        echo 'exporting database ' . $this->getDbName() . ' as ' . $fileName . "\n";
 
         return $command;
     }
@@ -251,8 +282,22 @@ class DbHandler
             $dumpFilePrefix = 'tmp_db_dump';
         }
 
-        $fileName = $this->getTemporaryFolder() . '/' . $dumpFilePrefix . '_' . $this->getDbName();
+        $fileName = $this->getTemporaryFolder() . '/' . $dumpFilePrefix . '_' . $this->getDbName(true);
 
         return $fileName;
+    }
+
+    /**
+     * Check whether the database clone already exists
+     *
+     * @return bool
+     */
+    public function dbCloneExists()
+    {
+        // echo "dbClone exists?" . PHP_EOL;
+        $result = $this->dbConnection->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \'' . $this->configFile->dbName . '_clone\'');
+        $exists = $result->num_rows === 1;
+        $result->close();
+        return $exists;
     }
 }

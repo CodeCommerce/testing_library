@@ -57,6 +57,7 @@ class ShopInstaller implements ShopServiceInterface
         $this->shopConfig = new oxConfigFile($shopPath . "config.inc.php");
 
         $this->dbHandler = new DbHandler($this->shopConfig);
+        //$this->dbHandler->setTemporaryFolder($config->getTempDirectory());
 
         include $shopPath ."core/oxconfk.php";
 
@@ -152,8 +153,11 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler->query("alter schema character set latin1 collate latin1_general_ci");
         $dbHandler->query("set character set latin1");
 
-        $dbHandler->query('drop database `' . $dbHandler->getDbName() . '`');
-        $dbHandler->query('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
+        if (!$dbHandler->dbCloneExists()) {
+            $dbHandler->dropDatabase();
+            $dbHandler->query('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
+        }
+
         $sSetupPath = $this->getSetupDirectory();
         $suffix = $this->getServiceConfig()->getEditionSufix();
         if (!file_exists($sSetupPath . "/sql$suffix/database.sql")) {
