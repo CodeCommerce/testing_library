@@ -120,6 +120,8 @@ class DbHandler
     public function createDatabaseClone()
     {
         $this->query('create database `' . $this->getDbName(true) . '_clone` collate ' . $this->getCharsetMode() . '_general_ci');
+        putenv('DBCLONENAME=' . $this->getDbName());
+        echo "created database clone" . PHP_EOL;
     }
 
     /**
@@ -127,7 +129,9 @@ class DbHandler
      */
     public function dropDatabase()
     {
-        $this->query('drop database `' . $this->getDbName() . '`');
+        $dbName = $this->getDbName();
+        $this->query('drop database `' . $dbName . '`');
+        echo "dropped database " . $dbName .PHP_EOL;
     }
 
     /**
@@ -294,10 +298,16 @@ class DbHandler
      */
     public function dbCloneExists()
     {
-        // echo "dbClone exists?" . PHP_EOL;
-        $result = $this->dbConnection->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \'' . $this->configFile->dbName . '_clone\'');
-        $exists = $result->num_rows === 1;
-        $result->close();
-        return $exists;
+        if (getenv("DBCLONENAME")) {
+            echo "clone exists env" . PHP_EOL;
+            return true;
+        }
+        else {
+            echo "clone exists query" . PHP_EOL;
+            $result = $this->dbConnection->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \'' . $this->configFile->dbName . '_clone\'');
+            $exists = $result->num_rows === 1;
+            $result->close();
+            return $exists;
+        }
     }
 }
