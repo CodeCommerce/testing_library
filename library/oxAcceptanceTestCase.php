@@ -136,15 +136,10 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     {
         if (!self::$testsSuiteStarted) {
             self::$testsSuiteStarted = true;
-            $this->dumpDb('reset_suite_db_dump');
-        } else {
-            $this->restoreDb('reset_suite_db_dump');
         }
 
         $this->activateModules();
         $this->addTestData($testSuitePath);
-
-        $this->dumpDb('reset_test_db_dump');
     }
 
     /**
