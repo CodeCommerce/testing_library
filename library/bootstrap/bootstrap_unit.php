@@ -33,6 +33,11 @@ class UnitBootstrap extends Bootstrap
 
         $config = $this->getTestConfig();
 
+        if ($config->shouldUseDatabaseClone()) {
+            $this->registerDbCloneSetup($config->shouldDeleteDatabaseCloneAfterTestsSuite());
+            // TODO: how to make sure that the tests actually use the clone?
+        }
+
         $dbRestoreClass = $config->getDatabaseRestorationClass();
         if (file_exists(TEST_LIBRARY_PATH .'dbRestore/'.$dbRestoreClass . ".php")) {
             $restoreDbPath = TEST_LIBRARY_PATH .'dbRestore/'. $dbRestoreClass . ".php";
@@ -47,6 +52,29 @@ class UnitBootstrap extends Bootstrap
         }
 
         require_once TEST_LIBRARY_PATH .'/oxUnitTestCase.php';
+    }
+
+    /**
+     * Clones the original database into a new database by creating, a dump, creating a new database, but
+     * dropping an existing clone at the beginning
+     *
+     * @param boolean   $deleteDbCloneAfterSuite
+     */
+    protected function registerDbCloneSetup($deleteDbCloneAfterSuite)
+    {
+        $serviceCaller = new oxServiceCaller();
+        $serviceCaller->setParameter('cloneDB', true);
+        $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
+        $serviceCaller->callService('DBCloneService', 1);
+
+        if ($deleteDbCloneAfterSuite) {
+            register_shutdown_function(function () {
+                $serviceCaller = new oxServiceCaller();
+                $serviceCaller->setParameter('dropDBClone', true);
+                $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
+                $serviceCaller->callService('DBCloneService', 1);
+            });
+        }
     }
 }
 

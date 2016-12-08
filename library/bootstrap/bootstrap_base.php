@@ -53,14 +53,8 @@ class Bootstrap
 
         $this->setGlobalConstants();
 
-        if ($testConfig->shouldUseDatabaseClone()) {
-            $this->registerDbCloneSetup($testConfig->shouldDeleteDatabaseCloneAfterTestsSuite());
-            // TODO: how to make sure that the tests actually use the clone?
-        }
-        else {
-            if ($testConfig->shouldRestoreShopAfterTestsSuite()) {
-                $this->registerResetDbAfterSuite();
-            }
+        if ($testConfig->shouldRestoreShopAfterTestsSuite()) {
+            $this->registerResetDbAfterSuite();
         }
 
         if ($testConfig->shouldInstallShop()) {
@@ -172,28 +166,5 @@ class Bootstrap
                 $serviceCaller->callService('ShopPreparation', 1);
             }
         });
-    }
-
-    /**
-     * Clones the original database into a new database by creating, a dump, creating a new database, but
-     * dropping an existing clone at the beginning
-     *
-     * @param boolean   $deleteDbCloneAfterSuite
-     */
-    protected function registerDbCloneSetup($deleteDbCloneAfterSuite)
-    {
-        $serviceCaller = new oxServiceCaller();
-        $serviceCaller->setParameter('cloneDB', true);
-        $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
-        $serviceCaller->callService('DBCloneService', 1);
-
-        if ($deleteDbCloneAfterSuite) {
-            register_shutdown_function(function () {
-                $serviceCaller = new oxServiceCaller();
-                $serviceCaller->setParameter('dropDBClone', true);
-                $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
-                $serviceCaller->callService('DBCloneService', 1);
-            });
-        }
     }
 }
