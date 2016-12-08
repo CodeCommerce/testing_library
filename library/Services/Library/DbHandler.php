@@ -162,7 +162,7 @@ class DbHandler
     {
         $dbName = $this->configFile->dbName;
 
-        if (!$useOriginal && $this->dbCloneExists()) {
+        if (!$useOriginal && !strpos($dbName, 'clone') && $this->dbCloneExists()) {
             $dbName .= '_clone';
         }
 
