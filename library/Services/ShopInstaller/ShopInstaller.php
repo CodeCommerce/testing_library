@@ -89,7 +89,9 @@ class ShopInstaller implements ShopServiceInterface
             $this->setSetupDirectory($setupPath);
         }
 
-        $this->setupDatabase();
+        if (!$this->dbHandler->dbCloneExists()) {
+            $this->setupDatabase();
+        }
 
         if ($tempDir = $request->getParameter('tempDirectory')) {
             $this->insertConfigValue('string', 'sCompileDir', $tempDir);
@@ -153,10 +155,8 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler->query("alter schema character set latin1 collate latin1_general_ci");
         $dbHandler->query("set character set latin1");
 
-        if (!$dbHandler->dbCloneExists()) {
-            $dbHandler->dropDatabase();
-            $dbHandler->query('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
-        }
+        $dbHandler->dropDatabase();
+        $dbHandler->query('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
 
         $sSetupPath = $this->getSetupDirectory();
         $suffix = $this->getServiceConfig()->getEditionSufix();
