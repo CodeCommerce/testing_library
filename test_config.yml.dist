@@ -25,6 +25,7 @@ optional_parameters:
     is_subshop: false
 
     # Whether to prepare shop database for testing. Shop config.ing.php file must be correct.
+    # It might make sense to not install the shop when running selenium tests
     install_shop: true
 
     # If defined, testing services will be copied to this directory and called via url instead of used locally.
@@ -38,6 +39,12 @@ optional_parameters:
 
     # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
     restore_shop_after_tests_suite: false
+
+    # Whether to use a database clone.
+    use_database_clone: true
+
+    # Whether to delete the database clone at the end of the tests
+    delete_database_clone_after_tests_suite: true
 
     # If php has no write access to /tmp folder, provide alternative temp folder for tests.
     tmp_path: /tmp/oxid_test_library/
@@ -67,7 +74,7 @@ optional_parameters:
     # Browser name which will be used for acceptance testing.
     # Possible values: *iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera.
     # Make sure that path to browser executable is known for the system.
-    browser_name: 'firefox'
+    browser_name: 'googlechrome'
 
     # Selenium server IP address. Used to connect to selenium server when Mink selenium driver is used for acceptance tests.
     selenium_server_ip: '127.0.0.1'
