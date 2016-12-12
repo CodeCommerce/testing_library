@@ -132,6 +132,18 @@ class oxTestConfig
     }
 
     /**
+     * Returns shops version number (eg. '4.4.2')
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        $config = new oxConfig();
+        $sVersion = $config->getVersion();
+        return $sVersion;
+    }
+
+    /**
      * Returns shop id
      *
      * @return int|string

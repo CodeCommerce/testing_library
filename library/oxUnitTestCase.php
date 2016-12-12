@@ -557,7 +557,9 @@ class oxUnitTestCase extends oxBaseTestCase
     {
         $sCol = (!empty($columnName)) ? $columnName : 'oxid';
 
-        if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($table, $this->getMultiShopTables())) {
+        $sShopVersion = $this->getTestConfig()->getVersion();
+        $sCompatibleShopVersion = '5.2.4';
+        if ($this->getTestConfig()->getShopEdition() == 'EE' && version_compare($sShopVersion, $sCompatibleShopVersion) > -1 && in_array($table, $this->getMultiShopTables())) {
             // deletes all records from shop relations table
             $query = "delete from `{$table}2shop`
                 where oxmapobjectid in (select oxmapid from `$table` where `$sCol` like '\_%')";
