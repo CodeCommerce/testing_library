@@ -47,7 +47,8 @@ class DbCloneService implements ShopServiceInterface
             $this->dbHandler->setDbCloneName($dbCloneName);
 
             $this->dropDatabaseCloneIfExists($dbCloneName);
-            $this->dbHandler->createDatabase();
+            $this->dbHandler->createDatabase($dbCloneName);
+            $_ENV['DBCLONENAME'] = $dbCloneName;
 
             if ($request->getParameter('importOriginalData')) {
                 $this->dbHandler->dumpDB($dumpPrefix);

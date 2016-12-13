@@ -77,20 +77,23 @@ class DbHandler
 
     /**
      * Drops the database
+     * @param string|null $dbCloneName
      */
-    public function dropDatabase()
+    public function dropDatabase($dbCloneName = null)
     {
-        $dbName = $this->getDbName();
+        $dbName = $dbCloneName? $dbCloneName : $this->getDbName();
         echo 'Trying to drop database ' . $dbName . PHP_EOL;
         $this->query('drop database `' . $dbName . '`');
     }
 
     /**
      * Creates the database
+     *
+     * @param string|null $dbCloneName
      */
-    public function createDatabase()
+    public function createDatabase($dbCloneName = null)
     {
-        $dbName = $this->getDbName();
+        $dbName = $dbCloneName? $dbCloneName : $this->getDbName();
         echo 'Trying to create database ' . $dbName . PHP_EOL;
         $this->query('create database `' . $dbName . '` collate ' . $this->getCharsetMode() . '_general_ci');
     }
