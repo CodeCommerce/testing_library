@@ -31,15 +31,20 @@ class DbHandler
     /** @var mysqli Database connection. */
     private $dbConnection;
 
+    /** @var  string */
+    private $dbCloneName;
+
     /**
      * Initiates class dependencies.
      *
      * @param oxConfigFile $configFile
+     * @param string $dbCloneName
      */
-    public function __construct($configFile)
+    public function __construct($configFile, $dbCloneName = null)
     {
         $this->configFile = $configFile;
         $this->dbConnection = mysqli_connect($this->getDbHost(), $this->getDbUser(), $this->getDbPassword());
+        $this->dbCloneName = $dbCloneName;
     }
 
     /**
@@ -50,6 +55,14 @@ class DbHandler
     public function setTemporaryFolder($sTemporaryFolder)
     {
         $this->temporaryFolder = $sTemporaryFolder;
+    }
+
+    /**
+     * @param string $dbCloneName
+     */
+    public function setDbCloneName($dbCloneName)
+    {
+        $this->dbCloneName = $dbCloneName;
     }
 
     /**
@@ -64,24 +77,20 @@ class DbHandler
 
     /**
      * Drops the database
-     *
-     * @param string|null $dbCloneName
      */
-    public function dropDatabase($dbCloneName = null)
+    public function dropDatabase()
     {
-        $dbName = $dbCloneName? $dbCloneName : $this->getDbName();
+        $dbName = $this->getDbName();
         echo 'Trying to drop database ' . $dbName . PHP_EOL;
         $this->query('drop database `' . $dbName . '`');
     }
 
     /**
      * Creates the database
-     *
-     * @param string|null $dbCloneName
      */
-    public function createDatabase($dbCloneName = null)
+    public function createDatabase()
     {
-        $dbName = $dbCloneName? $dbCloneName : $this->getDbName();
+        $dbName = $this->getDbName();
         echo 'Trying to create database ' . $dbName . PHP_EOL;
         $this->query('create database `' . $dbName . '` collate ' . $this->getCharsetMode() . '_general_ci');
     }
@@ -157,10 +166,16 @@ class DbHandler
     }
 
     /**
+     * @param boolean $useOriginal  force to return the original dbName
+     *
      * @return string
      */
-    public function getDbName()
+    public function getDbName($useOriginal = false)
     {
+        if (!$useOriginal && $this->dbCloneName && $this->databaseExists($this->dbCloneName)) {
+            return $this->dbCloneName;
+        }
+
         return $this->configFile->dbName;
     }
 
@@ -248,7 +263,7 @@ class DbHandler
         if ($password = $this->getDbPassword()) {
             $command .= ' -p' . escapeshellarg($password);
         }
-        $command .= ' --add-drop-table ' . escapeshellarg($this->getDbName());
+        $command .= ' --add-drop-table ' . escapeshellarg($this->getDbName(true));
         $command .= ' > ' . escapeshellarg($fileName);
 
         echo 'exporting database ' . $this->getDbName() . ' as ' . $fileName . PHP_EOL;
@@ -291,7 +306,7 @@ class DbHandler
             $dumpFilePrefix = 'tmp_db_dump';
         }
 
-        $fileName = $this->getTemporaryFolder() . '/' . $dumpFilePrefix . '_' . $this->getDbName();
+        $fileName = $this->getTemporaryFolder() . '/' . $dumpFilePrefix . '_' . $this->getDbName(true);
 
         return $fileName;
     }

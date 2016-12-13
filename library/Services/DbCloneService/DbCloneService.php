@@ -44,8 +44,10 @@ class DbCloneService implements ShopServiceInterface
             $origDbName = $request->getParameter('originalDbName');
             $dbCloneName = $request->getParameter('dbCloneName');
 
+            $this->dbHandler->setDbCloneName($dbCloneName);
+
             $this->dropDatabaseCloneIfExists($dbCloneName);
-            $this->dbHandler->createDatabase($dbCloneName);
+            $this->dbHandler->createDatabase();
 
             if ($request->getParameter('importOriginalData')) {
                 $this->dbHandler->dumpDB($dumpPrefix);
@@ -70,7 +72,7 @@ class DbCloneService implements ShopServiceInterface
     public function dropDatabaseCloneIfExists($dbCloneName) {
 
         if ($this->dbHandler->databaseExists($dbCloneName)) {
-            $this->dbHandler->dropDatabase($dbCloneName);
+            $this->dbHandler->dropDatabase();
         }
 
         echo 'DbCloneService drops database if it exists' . PHP_EOL;
