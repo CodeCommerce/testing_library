@@ -63,6 +63,26 @@ class DbHandler
     }
 
     /**
+     * Drops the database
+     */
+    public function dropDatabase()
+    {
+        $dbName = $this->getDbName();
+        echo 'Trying to drop database ' . $dbName . PHP_EOL;
+        $this->query('drop database `' . $dbName . '`');
+    }
+
+    /**
+     * Creates the database
+     */
+    public function createDatabase()
+    {
+        $dbName = $this->getDbName();
+        echo 'Trying to create database ' . $dbName . PHP_EOL;
+        $this->query('create database `' . $dbName . '` collate ' . $this->getCharsetMode() . '_general_ci');
+    }
+
+    /**
      * Creates a dump of the current database, and store in temporary folder.
      * The dump includes the data and sql insert statements.
      *
