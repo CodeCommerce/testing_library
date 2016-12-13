@@ -1,5 +1,7 @@
 <?php
 
+include_once LIBRARY_PATH . '/DbHandler.php';
+
 class DbCloneService implements ShopServiceInterface
 {
     /**
