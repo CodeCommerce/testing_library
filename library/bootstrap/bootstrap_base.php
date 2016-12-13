@@ -50,14 +50,8 @@ class Bootstrap
         $testConfig = $this->getTestConfig();
 
 
-        if ($this->isCurrentTestSuiteForModuleTests()) {
-            if ($testConfig->shouldUseDatabaseCloneForModuleTests()) {
-                $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForModuleTests();
-            }
-        }
-        else if ($testConfig->shouldUseDatabaseCloneForShopTests()) {
-            $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForShopTests();
-        }
+        $this->prepareDbClone();
+
 
         $this->prepareShop();
 
@@ -80,6 +74,25 @@ class Bootstrap
     public function getTestConfig()
     {
         return $this->testConfig;
+    }
+
+    /**
+     * Prepares a database clone if necessary
+     */
+    protected function prepareDbClone()
+    {
+        $testConfig = $this->getTestConfig();
+
+        if ($this->isCurrentTestSuiteForModuleTests()) {
+            if ($testConfig->shouldUseDatabaseCloneForModuleTests()) {
+                $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForModuleTests();
+                $this->registerDbCloneService($testConfig->shouldDeleteDatabaseCloneForModuleTestsAfterTestsSuite());
+            }
+        }
+        else if ($testConfig->shouldUseDatabaseCloneForShopTests()) {
+            $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForShopTests();
+            $this->registerDbCloneService($testConfig->shouldDeleteDatabaseCloneForShopTestsAfterTestsSuite());
+        }
     }
 
     /**
@@ -176,6 +189,21 @@ class Bootstrap
                 $serviceCaller->callService('ShopPreparation', 1);
             }
         });
+    }
+
+    /**
+     * @param boolean $shouldDropCloneAfterTestSuite
+     *
+     * Calls a service that handles creating and dropping the dbClone
+     */
+    protected function registerDbCloneService($shouldDropCloneAfterTestSuite)
+    {
+        $testConfig = $this->getTestConfig();
+        $serviceCaller = new oxServiceCaller($testConfig);
+        $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
+        $serviceCaller->setParameter('createClone', true);
+        $serviceCaller->setParameter('dropCloneAfterTestSuite', $shouldDropCloneAfterTestSuite);
+        $serviceCaller->callService('DbCloneService', 1);
     }
 
     /**
