@@ -41,7 +41,7 @@ class DbCloneService implements ShopServiceInterface
     {
         if ($request->getParameter('createClone')) {
             // TODO: implement
-            //$this->dropDatabaseCloneIfExists();
+            $this->dropDatabaseCloneIfExists();
             //$dumpPrefix = $request->getParameter('dump-prefix');
             //$this->dbHandler->dumpDB($dumpPrefix);
             //$this->dbHandler->createDatabase();
