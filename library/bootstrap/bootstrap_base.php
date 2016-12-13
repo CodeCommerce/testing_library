@@ -49,6 +49,17 @@ class Bootstrap
     {
         $testConfig = $this->getTestConfig();
 
+
+        if ($this->isCurrentTestSuiteForModuleTests() && $testConfig->shouldUseDatabaseCloneForModuleTests()) {
+            $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForModuleTests();
+        }
+        else if ($testConfig->shouldUseDatabaseCloneForShopTests()) {
+            $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForShopTests();
+        }
+        else {
+            unset($_ENV['DBCLONENAME']);
+        }
+
         $this->prepareShop();
 
         $this->setGlobalConstants();
@@ -166,5 +177,19 @@ class Bootstrap
                 $serviceCaller->callService('ShopPreparation', 1);
             }
         });
+    }
+
+    /**
+     * Determine whether the current test suite is for module tests, based on testConfig
+     *
+     * @return boolean
+     */
+    protected function isCurrentTestSuiteForModuleTests()
+    {
+        $currentTestSuite = $this->testConfig->getCurrentTestSuite();
+        $moduleTestSuites = $this->testConfig->getModuleTestSuites();
+        $intersections = array_intersect(array($currentTestSuite), $moduleTestSuites);
+
+        return count($intersections) > 0;
     }
 }
