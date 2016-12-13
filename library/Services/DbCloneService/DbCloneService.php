@@ -41,11 +41,18 @@ class DbCloneService implements ShopServiceInterface
     {
         if ($request->getParameter('createClone')) {
             // TODO: implement
+            $dumpPrefix = $request->getParameter('dump-prefix');
+            $origDbName = $request->getParameter('originalDbName');
+            $dbCloneName = $request->getParameter('dbCloneName');
+
             $this->dropDatabaseCloneIfExists();
-            //$dumpPrefix = $request->getParameter('dump-prefix');
-            //$this->dbHandler->dumpDB($dumpPrefix);
-            //$this->dbHandler->createDatabase();
-            //$this->dbHandler->import($this->dbHandler->getTemporaryFolder() . $dumpPrefix . '_' . $this->dbHandler->getDbName());
+            $this->dbHandler->dumpDB($dumpPrefix);
+            $this->dbHandler->createDatabase($dbCloneName);
+
+            if ($request->getParameter('importOriginalData')) {
+                $this->dbHandler->import($this->dbHandler->getTemporaryFolder() . $dumpPrefix . '_' . $origDbName);
+            }
+
             echo 'DbCloneService creates the clone' . PHP_EOL;
         }
 

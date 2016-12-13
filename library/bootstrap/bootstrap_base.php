@@ -84,12 +84,12 @@ class Bootstrap
         if ($this->isCurrentTestSuiteForModuleTests()) {
             if ($testConfig->shouldUseDatabaseCloneForModuleTests()) {
                 $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForModuleTests();
-                $this->registerDbCloneService($testConfig->shouldDeleteDatabaseCloneForModuleTestsAfterTestsSuite());
+                $this->registerDbCloneService($testConfig->shouldDeleteDatabaseCloneForModuleTestsAfterTestsSuite(), true);
             }
         }
         else if ($testConfig->shouldUseDatabaseCloneForShopTests()) {
             $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForShopTests();
-            $this->registerDbCloneService($testConfig->shouldDeleteDatabaseCloneForShopTestsAfterTestsSuite());
+            $this->registerDbCloneService($testConfig->shouldDeleteDatabaseCloneForShopTestsAfterTestsSuite(), false);
         }
     }
 
@@ -190,17 +190,23 @@ class Bootstrap
     }
 
     /**
+     * @param string $dbCloneName
      * @param boolean $shouldDropCloneAfterTestSuite
+     * @param boolean $shouldImportOriginalData
      *
      * Calls a service that handles creating and dropping the dbClone
      */
-    protected function registerDbCloneService($shouldDropCloneAfterTestSuite)
+    protected function registerDbCloneService($dbCloneName, $shouldDropCloneAfterTestSuite, $shouldImportOriginalData)
     {
         $testConfig = $this->getTestConfig();
         $serviceCaller = new oxServiceCaller($testConfig);
         $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
         $serviceCaller->setParameter('createClone', true);
         $serviceCaller->setParameter('dropCloneAfterTestSuite', $shouldDropCloneAfterTestSuite);
+        $serviceCaller->setParameter('importOriginalData', $shouldImportOriginalData);
+        $serviceCaller->setParameter('originalDbName', $testConfig->getOriginalDatabaseName());
+        $serviceCaller->setParameter('dbCloneName', $dbCloneName);
+
         $serviceCaller->callService('DbCloneService', 1);
     }
 
