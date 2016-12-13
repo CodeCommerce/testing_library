@@ -193,6 +193,8 @@ class DbHandler
         $command .= ' ' .escapeshellarg($this->getDbName());
         $command .= ' < ' . escapeshellarg($fileName) . ' 2>&1';
 
+        echo 'importing database ' . $fileName . ' into database ' . $this->getDbName() . PHP_EOL;
+
         return $command;
     }
 
@@ -212,6 +214,8 @@ class DbHandler
         }
         $command .= ' --add-drop-table ' . escapeshellarg($this->getDbName());
         $command .= ' > ' . escapeshellarg($fileName);
+
+        echo 'exporting database ' . $this->getDbName() . ' as ' . $fileName . PHP_EOL;
 
         return $command;
     }
