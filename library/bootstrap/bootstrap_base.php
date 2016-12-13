@@ -49,11 +49,9 @@ class Bootstrap
     {
         $testConfig = $this->getTestConfig();
 
+        $this->prepareShop();
 
         $this->prepareDbClone();
-
-
-        $this->prepareShop();
 
         $this->setGlobalConstants();
 
