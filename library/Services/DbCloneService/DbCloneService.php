@@ -70,7 +70,7 @@ class DbCloneService implements ShopServiceInterface
     public function dropDatabaseCloneIfExists($dbCloneName) {
 
         if ($this->dbHandler->databaseExists($dbCloneName)) {
-            $this->dbHandler->dropDatabase();
+            $this->dbHandler->dropDatabase($dbCloneName);
         }
 
         echo 'DbCloneService drops database if it exists' . PHP_EOL;

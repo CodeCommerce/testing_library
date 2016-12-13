@@ -64,10 +64,12 @@ class DbHandler
 
     /**
      * Drops the database
+     *
+     * @param string|null $dbCloneName
      */
-    public function dropDatabase()
+    public function dropDatabase($dbCloneName = null)
     {
-        $dbName = $this->getDbName();
+        $dbName = $dbCloneName? $dbCloneName : $this->getDbName();
         echo 'Trying to drop database ' . $dbName . PHP_EOL;
         $this->query('drop database `' . $dbName . '`');
     }
