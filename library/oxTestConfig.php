@@ -536,6 +536,26 @@ class oxTestConfig
     }
 
     /**
+     * Name to use for the clone of the original database, when running moduletests
+     *
+     * @return string|null
+     */
+    public function getDatabaseCloneNameForModuleTests()
+    {
+        return (string)$this->getValue('database_clone_name_for_module_tests');
+    }
+
+    /**
+     * Name to use for the clone of the original database, when running shoptests
+     *
+     * @return string|null
+     */
+    public function getDatabaseCloneNameForShopTests()
+    {
+        return (string)$this->getValue('database_clone_name_for_shop_tests');
+    }
+
+    /**
      * Returns configuration parameter value. First checks if environmental variable is set with the same uppercase name or provided one.
      *
      * @param string $param Parameter name.

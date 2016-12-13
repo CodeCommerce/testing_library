@@ -29,7 +29,9 @@ echo 'DbClone config:' . PHP_EOL .
     '-use_database_clone_for_module_tests : ' . ($testConfig->shouldUseDatabaseCloneForModuleTests() ? 'true' : 'false') . PHP_EOL .
     '-delete_database_clone_for_module_tests_after_tests_suite: ' . ($testConfig->shouldDeleteDatabaseCloneForModuleTestsAfterTestsSuite() ? 'true' : 'false')  . PHP_EOL .
     '-use_database_clone_for_shop_tests: ' . ($testConfig->shouldUseDatabaseCloneForShopTests() ? 'true' : 'false') . PHP_EOL .
-    '-delete_database_clone_for_shop_tests_after_tests_suite: ' . ($testConfig->shouldDeleteDatabaseCloneForShopTestsAfterTestsSuite() ? 'true' : 'false') . PHP_EOL . PHP_EOL;
+    '-delete_database_clone_for_shop_tests_after_tests_suite: ' . ($testConfig->shouldDeleteDatabaseCloneForShopTestsAfterTestsSuite() ? 'true' : 'false') . PHP_EOL .
+    '-database_clone_name_for_module_tests: ' . $testConfig->getDatabaseCloneNameForModuleTests() . PHP_EOL .
+    '-database_clone_name_for_shop_tests: ' . $testConfig->getDatabaseCloneNameForShopTests() . PHP_EOL . PHP_EOL;
 
 $arguments = array();
 array_shift($argv);

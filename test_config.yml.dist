@@ -53,6 +53,12 @@ optional_parameters:
     # Whether to delete database clone for shoptests at the end of the tests
     delete_database_clone_for_shop_tests_after_tests_suite: true
 
+    # Name to use for the clone of the original database, when running moduletests
+    database_clone_name_for_module_tests: 'module_tests_clone'
+
+    # Name to use for the clone of the original database, when running shoptests
+    database_clone_name_for_shop_tests: 'shop_tests_clone'
+
     # If php has no write access to /tmp folder, provide alternative temp folder for tests.
     tmp_path: /tmp/oxid_test_library/
 
