@@ -50,14 +50,18 @@ class Bootstrap
         $testConfig = $this->getTestConfig();
 
 
-        if ($this->isCurrentTestSuiteForModuleTests() && $testConfig->shouldUseDatabaseCloneForModuleTests()) {
-            $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForModuleTests();
-        }
-        else if ($testConfig->shouldUseDatabaseCloneForShopTests()) {
-            $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForShopTests();
+        if ($this->isCurrentTestSuiteForModuleTests()) {
+            if ($testConfig->shouldUseDatabaseCloneForModuleTests()) {
+                $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForModuleTests();
+            }
         }
         else {
-            unset($_ENV['DBCLONENAME']);
+            if ($testConfig->shouldUseDatabaseCloneForShopTests()) {
+                $_ENV['DBCLONENAME'] = $testConfig->getDatabaseCloneNameForShopTests();
+            }
+            else {
+                unset($_ENV['DBCLONENAME']);
+            }
         }
 
         $this->prepareShop();
