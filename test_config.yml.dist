@@ -39,6 +39,20 @@ optional_parameters:
     # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
     restore_shop_after_tests_suite: false
 
+    # Whether to use a database clone for moduletests. This clone will be filled with the original database's data,
+    # when running moduletests. The original database won't be modified.
+    use_database_clone_for_module_tests: false
+
+    # Whether to use a database clone for shoptests. This clone will be filled with testdata from oxid,
+    # when running shoptests. The original database won't be modified.
+    use_database_clone_for_shop_tests: true
+
+    # Whether to delete the database clone for moduletests at the end of the tests
+    delete_database_clone_for_module_tests_after_tests_suite: false
+
+    # Whether to delete database clone for shoptests at the end of the tests
+    delete_database_clone_for_shop_tests_after_tests_suite: true
+
     # If php has no write access to /tmp folder, provide alternative temp folder for tests.
     tmp_path: /tmp/oxid_test_library/
 

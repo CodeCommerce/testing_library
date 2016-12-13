@@ -496,6 +496,46 @@ class oxTestConfig
     }
 
     /**
+    * Whether to use a clone of the original datbase for moduletests instead of the original
+    *
+    * @return boolean|null
+    */
+    public function shouldUseDatabaseCloneForModuleTests()
+    {
+        return (boolean)$this->getValue('use_database_clone_for_module_tests');
+    }
+
+    /**
+    * Whether to delete the cloned database for moduletests after the tests have run
+    *
+    * @return boolean|null
+    */
+    public function shouldDeleteDatabaseCloneForModuleTestsAfterTestsSuite()
+    {
+        return (boolean)$this->getValue('delete_database_clone_for_module_tests_after_tests_suite');
+    }
+
+    /**
+     * Whether to use a clone of the original datbase for shoptests instead of the original
+     *
+     * @return boolean|null
+     */
+    public function shouldUseDatabaseCloneForShopTests()
+    {
+        return (boolean)$this->getValue('use_database_clone_for_shop_tests');
+    }
+
+    /**
+     * Whether to delete the cloned database for shoptests after the tests have run
+     *
+     * @return boolean|null
+     */
+    public function shouldDeleteDatabaseCloneForShopTestsAfterTestsSuite()
+    {
+        return (boolean)$this->getValue('delete_database_clone_for_shop_tests_after_tests_suite');
+    }
+
+    /**
      * Returns configuration parameter value. First checks if environmental variable is set with the same uppercase name or provided one.
      *
      * @param string $param Parameter name.
