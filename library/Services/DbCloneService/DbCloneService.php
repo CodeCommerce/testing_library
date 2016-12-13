@@ -27,7 +27,7 @@ class DbCloneService implements ShopServiceInterface
         include_once $shopPath . "core/oxconfigfile.php";
         $this->shopConfig = new oxConfigFile($shopPath . "config.inc.php");
         $this->dbHandler = new DbHandler($this->shopConfig);
-        $this->dbHandler->setTemporaryFolder($this->shopConfig->getTempDirectory());
+        $this->dbHandler->setTemporaryFolder($this->serviceConfig->getTempDirectory());
     }
 
     /**
