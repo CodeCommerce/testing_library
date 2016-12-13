@@ -246,7 +246,7 @@ class DbHandler
             $command .= ' -p' . escapeshellarg($password);
         }
         $command .= ' --default-character-set=' . $charsetMode;
-        $command .= ' ' .escapeshellarg();
+        $command .= ' ' .escapeshellarg($dbName);
         $command .= ' < ' . escapeshellarg($fileName) . ' 2>&1';
 
         echo 'import ' . $fileName . ' into database ' . $dbName . PHP_EOL;
