@@ -54,14 +54,10 @@ class DbCloneService implements ShopServiceInterface
                 $this->dbHandler->dumpDB($dumpPrefix);
                 $this->dbHandler->import($this->dbHandler->getTemporaryFolder() . $dumpPrefix . '_' . $origDbName);
             }
-
-            echo 'DbCloneService creates the clone' . PHP_EOL;
         }
 
         if ($request->getParameter('dropCloneAfterTestSuite')) {
-            // TODO: implement
             register_shutdown_function(function($dbCloneName) {
-                echo 'DbCloneService\'s shutdown function was called' . PHP_EOL;
                 $this->dropDatabaseCloneIfExists($dbCloneName);
             }, $dbCloneName);
         }
@@ -75,7 +71,5 @@ class DbCloneService implements ShopServiceInterface
         if ($this->dbHandler->databaseExists($dbCloneName)) {
             $this->dbHandler->dropDatabase();
         }
-
-        echo 'DbCloneService drops database if it exists' . PHP_EOL;
     }
 }

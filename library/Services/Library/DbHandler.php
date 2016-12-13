@@ -82,7 +82,7 @@ class DbHandler
     public function dropDatabase($dbCloneName = null)
     {
         $dbName = $dbCloneName? $dbCloneName : $this->getDbName();
-        echo 'Trying to drop database ' . $dbName . PHP_EOL;
+        echo 'drop database ' . $dbName . PHP_EOL;
         $this->query('drop database `' . $dbName . '`');
     }
 
@@ -94,7 +94,7 @@ class DbHandler
     public function createDatabase($dbCloneName = null)
     {
         $dbName = $dbCloneName? $dbCloneName : $this->getDbName();
-        echo 'Trying to create database ' . $dbName . PHP_EOL;
+        echo 'create database ' . $dbName . PHP_EOL;
         $this->query('create database `' . $dbName . '` collate ' . $this->getCharsetMode() . '_general_ci');
     }
 
@@ -238,16 +238,18 @@ class DbHandler
      */
     protected function getImportCommand($fileName, $charsetMode)
     {
+        $dbName = $this->getDbName();
+
         $command = 'mysql -h' . escapeshellarg($this->getDbHost());
         $command .= ' -u' . escapeshellarg($this->getDbUser());
         if ($password = $this->getDbPassword()) {
             $command .= ' -p' . escapeshellarg($password);
         }
         $command .= ' --default-character-set=' . $charsetMode;
-        $command .= ' ' .escapeshellarg($this->getDbName());
+        $command .= ' ' .escapeshellarg();
         $command .= ' < ' . escapeshellarg($fileName) . ' 2>&1';
 
-        echo 'importing database ' . $fileName . ' into database ' . $this->getDbName() . PHP_EOL;
+        echo 'import ' . $fileName . ' into database ' . $dbName . PHP_EOL;
 
         return $command;
     }
@@ -261,15 +263,17 @@ class DbHandler
      */
     protected function getExportCommand($fileName)
     {
+        $dbName = $this->getDbName(true);
+
         $command = 'mysqldump -h' . escapeshellarg($this->getDbHost());
         $command .= ' -u' . escapeshellarg($this->getDbUser());
         if ($password = $this->getDbPassword()) {
             $command .= ' -p' . escapeshellarg($password);
         }
-        $command .= ' --add-drop-table ' . escapeshellarg($this->getDbName(true));
+        $command .= ' --add-drop-table ' . escapeshellarg($dbName);
         $command .= ' > ' . escapeshellarg($fileName);
 
-        echo 'exporting database ' . $this->getDbName(true) . ' as ' . $fileName . PHP_EOL;
+        echo 'export database ' . $dbName . ' as ' . $fileName . PHP_EOL;
 
         return $command;
     }
