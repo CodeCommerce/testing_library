@@ -52,8 +52,8 @@ class DbCloneService implements ShopServiceInterface
         if ($request->getParameter('dropCloneAfterTestSuite')) {
             // TODO: implement
             register_shutdown_function(function() {
-                // $this->dbHandler->dropDatabase();
                 echo 'DbCloneService\'s shutdown function was called' . PHP_EOL;
+                $this->dropDatabaseCloneIfExists();
             });
         }
     }
