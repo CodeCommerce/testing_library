@@ -59,6 +59,9 @@ optional_parameters:
     # Name to use for the clone of the original database, when running shoptests
     database_clone_name_for_shop_tests: 'shop_tests_clone'
 
+    # Name of the original database
+    original_database_name: 'mydb'
+
     # If php has no write access to /tmp folder, provide alternative temp folder for tests.
     tmp_path: /tmp/oxid_test_library/
 

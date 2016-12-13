@@ -556,6 +556,16 @@ class oxTestConfig
     }
 
     /**
+     * Name of the original database
+     *
+     * @return string|null
+     */
+    public function getOriginalDatabaseName()
+    {
+        return (string)$this->getValue('original_database_name');
+    }
+
+    /**
      * Returns configuration parameter value. First checks if environmental variable is set with the same uppercase name or provided one.
      *
      * @param string $param Parameter name.
