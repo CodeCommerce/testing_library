@@ -40,16 +40,15 @@ class DbCloneService implements ShopServiceInterface
     public function init($request)
     {
         if ($request->getParameter('createClone')) {
-            // TODO: implement
             $dumpPrefix = $request->getParameter('dump-prefix');
             $origDbName = $request->getParameter('originalDbName');
             $dbCloneName = $request->getParameter('dbCloneName');
 
-            $this->dropDatabaseCloneIfExists();
-            $this->dbHandler->dumpDB($dumpPrefix);
+            $this->dropDatabaseCloneIfExists($dbCloneName);
             $this->dbHandler->createDatabase($dbCloneName);
 
             if ($request->getParameter('importOriginalData')) {
+                $this->dbHandler->dumpDB($dumpPrefix);
                 $this->dbHandler->import($this->dbHandler->getTemporaryFolder() . $dumpPrefix . '_' . $origDbName);
             }
 
@@ -58,18 +57,22 @@ class DbCloneService implements ShopServiceInterface
 
         if ($request->getParameter('dropCloneAfterTestSuite')) {
             // TODO: implement
-            register_shutdown_function(function() {
+            register_shutdown_function(function($dbCloneName) {
                 echo 'DbCloneService\'s shutdown function was called' . PHP_EOL;
-                $this->dropDatabaseCloneIfExists();
-            });
+                $this->dropDatabaseCloneIfExists($dbCloneName);
+            }, $dbCloneName);
         }
     }
 
     /**
-     *
+     * @param string $dbCloneName
      */
-    public function dropDatabaseCloneIfExists() {
-        // TODO: implement
+    public function dropDatabaseCloneIfExists($dbCloneName) {
+
+        if ($this->dbHandler->databaseExists($dbCloneName)) {
+            $this->dbHandler->dropDatabase();
+        }
+
         echo 'DbCloneService drops database if it exists' . PHP_EOL;
     }
 }

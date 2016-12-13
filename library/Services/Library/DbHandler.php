@@ -197,6 +197,18 @@ class DbHandler
     }
 
     /**
+     * @param string $dbName
+     * @return boolean
+     */
+    public function databaseExists($dbName)
+    {
+        $result = $this->dbConnection->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \'' . $dbName . '\'');
+        $exists = $result->num_rows === 1;
+        $result->close();
+        return $exists;
+    }
+
+    /**
      * Returns CLI import command, execute sql from given file
      *
      * @param string $fileName    SQL File name to import.
