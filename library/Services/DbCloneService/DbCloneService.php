@@ -49,6 +49,7 @@ class DbCloneService implements ShopServiceInterface
             $this->dropDatabaseCloneIfExists($dbCloneName);
             $this->dbHandler->createDatabase($dbCloneName);
 
+            $_ENV['TESTING'] = true;
             $_ENV['DBCLONENAME'] = $dbCloneName;
             $this->shopConfig = new oxConfigFile($this->serviceConfig->getShopDirectory() . "config.inc.php");
             oxRegistry::set('oxConfigFile', $this->shopConfig);
