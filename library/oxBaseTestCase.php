@@ -7,7 +7,7 @@
 class oxBaseTestCase extends PHPUnit_Framework_TestCase
 {
     /** @var oxTestConfig */
-    private static $testConfig;
+    protected static $testConfig;
 
     /**
      * Returns test configuration.
