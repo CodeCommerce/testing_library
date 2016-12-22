@@ -149,11 +149,12 @@ class ShopInstaller implements ShopServiceInterface
     public function setupDatabase($shouldDropAndCreateDb)
     {
         $dbHandler = $this->getDbHandler();
-        $dbHandler->query("alter schema character set latin1 collate latin1_general_ci");
-        $dbHandler->query("set character set latin1");
 
         if ($shouldDropAndCreateDb) {
-            $dbHandler->dropDatabase();
+            $dbHandler->query("alter schema character set latin1 collate latin1_general_ci");
+            $dbHandler->query("set character set latin1");
+	    
+	    $dbHandler->dropDatabase();
             $dbHandler->createDatabase();
         }
 
