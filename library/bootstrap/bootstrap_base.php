@@ -59,7 +59,7 @@ class Bootstrap
             $this->registerResetDbAfterSuite();
         }
 
-        if ($testConfig->shouldInstallShop() && !$testConfig->isCurrentTestSuiteForModuleTests()) {
+        if ($testConfig->shouldInstallShop() && $testConfig->isCurrentTestSuiteForShopTests()) {
             $this->installShop();
         }
     }

@@ -580,6 +580,16 @@ class oxTestConfig
     }
 
     /**
+     * Inverted version of isCurrentTestSuiteForModuleTests
+     *
+     * @return boolean
+     */
+    public function isCurrentTestSuiteForShopTests()
+    {
+        return !$this->$this->isCurrentTestSuiteForModuleTests();
+    }
+
+    /**
      * Returns configuration parameter value. First checks if environmental variable is set with the same uppercase name or provided one.
      *
      * @param string $param Parameter name.

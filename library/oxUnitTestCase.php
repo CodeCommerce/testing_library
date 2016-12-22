@@ -98,7 +98,7 @@ class oxUnitTestCase extends oxBaseTestCase
         }
         oxRegistry::set("oxUtilsDate", new modOxUtilsDate());
 
-        if (!$testConfig->isCurrentTestSuiteForModuleTests()) {
+        if ($testConfig->isCurrentTestSuiteForShopTests()) {
             $this->backupDatabase();
         }
 
@@ -188,7 +188,7 @@ class oxUnitTestCase extends oxBaseTestCase
     {
         self::getShopStateBackup()->resetStaticVariables();
 
-        if (!self::$testConfig->isCurrentTestSuiteForModuleTests()) {
+        if (self::$testConfig->isCurrentTestSuiteForShopTests()) {
             $dbRestore = self::_getDbRestore();
             $dbRestore->restoreDB();
         }
