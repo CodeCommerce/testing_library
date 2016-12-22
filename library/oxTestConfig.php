@@ -586,7 +586,7 @@ class oxTestConfig
      */
     public function isCurrentTestSuiteForShopTests()
     {
-        return !$this->$this->isCurrentTestSuiteForModuleTests();
+        return !$this->isCurrentTestSuiteForModuleTests();
     }
 
     /**
