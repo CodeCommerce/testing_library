@@ -566,6 +566,20 @@ class oxTestConfig
     }
 
     /**
+     * Determine whether the current test suite is for module tests, based on testConfig
+     *
+     * @return boolean
+     */
+    public function isCurrentTestSuiteForModuleTests()
+    {
+        $currentTestSuite = $this->getCurrentTestSuite();
+        $moduleTestSuites = $this->getModuleTestSuites();
+        $intersections = array_intersect(array($currentTestSuite), $moduleTestSuites);
+
+        return count($intersections) > 0;
+    }
+
+    /**
      * Returns configuration parameter value. First checks if environmental variable is set with the same uppercase name or provided one.
      *
      * @param string $param Parameter name.

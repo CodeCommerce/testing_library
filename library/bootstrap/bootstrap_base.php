@@ -59,7 +59,7 @@ class Bootstrap
             $this->registerResetDbAfterSuite();
         }
 
-        if ($testConfig->shouldInstallShop() && !$this->isCurrentTestSuiteForModuleTests()) {
+        if ($testConfig->shouldInstallShop() && !$testConfig->isCurrentTestSuiteForModuleTests()) {
             $this->installShop();
         }
     }
@@ -81,7 +81,7 @@ class Bootstrap
     {
         $testConfig = $this->getTestConfig();
 
-        if ($this->isCurrentTestSuiteForModuleTests()) {
+        if ($testConfig->isCurrentTestSuiteForModuleTests()) {
             if ($testConfig->shouldUseDatabaseCloneForModuleTests()) {
                 $this->registerDbCloneService($testConfig->getDatabaseCloneNameForModuleTests(),
                     $testConfig->shouldDeleteDatabaseCloneForModuleTestsAfterTestsSuite(),
@@ -211,19 +211,5 @@ class Bootstrap
         $serviceCaller->setParameter('dbCloneName', $dbCloneName);
 
         $serviceCaller->callService('DbCloneService', 1);
-    }
-
-    /**
-     * Determine whether the current test suite is for module tests, based on testConfig
-     *
-     * @return boolean
-     */
-    protected function isCurrentTestSuiteForModuleTests()
-    {
-        $currentTestSuite = $this->testConfig->getCurrentTestSuite();
-        $moduleTestSuites = $this->testConfig->getModuleTestSuites();
-        $intersections = array_intersect(array($currentTestSuite), $moduleTestSuites);
-
-        return count($intersections) > 0;
     }
 }
