@@ -71,7 +71,7 @@ class oxFileCopier
      * @param string $directory       Path to directory.
      * @param bool   $removeBaseDir Whether to delete base directory.
      */
-    protected function deleteTree($directory, $removeBaseDir = false)
+    public function deleteTree($directory, $removeBaseDir = false)
     {
         $files = array_diff(scandir($directory), array('.', '..'));
         foreach ($files as $file) {
