@@ -157,11 +157,15 @@ class Bootstrap
             $remoteDirectory = $config->getRemoteDirectory();
             $shopDirectory = $remoteDirectory ? $remoteDirectory : $config->getShopPath();
 
+            echo 'copy ' . $setupPath . ' to ' . $shopDirectory . '/setup' . PHP_EOL;
             $fileCopier->copyFiles($setupPath, $shopDirectory.'/setup/');
         }
 
         try {
             $serviceCaller->callService('ShopInstaller');
+            // delete because not necessary anymore
+            echo 'remove ' . $shopDirectory . '/setup' . PHP_EOL;
+            $fileCopier->deleteTree($shopDirectory . '/setup', true);
         } catch (Exception $e) {
             exit("Failed to install shop with message:" . $e->getMessage());
         }
