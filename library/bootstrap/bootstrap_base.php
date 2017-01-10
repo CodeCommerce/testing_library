@@ -163,9 +163,16 @@ class Bootstrap
 
         try {
             $serviceCaller->callService('ShopInstaller');
-            // delete because not necessary anymore
-            echo 'remove ' . $shopDirectory . '/setup' . PHP_EOL;
-            $fileCopier->deleteTree($shopDirectory . '/setup', true);
+            
+            $shopVersion = $config->getVersion();
+            $versionThatDoesntNeedDelete = '5.2.4';
+            // only delete setup dir if shop version is less than 5.2.4,
+            // because 5.2.4 definitely needs that dir for shop tests
+            if (version_compare($shopVersion, $versionThatDoesntNeedDelete, 'lt')) {
+                // delete because not necessary anymore
+                echo 'remove ' . $shopDirectory . '/setup' . PHP_EOL;
+                $fileCopier->deleteTree($shopDirectory . '/setup', true);
+            }
         } catch (Exception $e) {
             exit("Failed to install shop with message:" . $e->getMessage());
         }
