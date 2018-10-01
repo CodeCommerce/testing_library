@@ -211,7 +211,7 @@ class Bootstrap
         $testConfig = $this->getTestConfig();
         $serviceCaller = new oxServiceCaller($testConfig);
         $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
-        $serviceCaller->setParameter('createClone', true);
+        $serviceCaller->setParameter('createClone', $testConfig->getCreateClone());
         $serviceCaller->setParameter('dropCloneAfterTestSuite', $shouldDropCloneAfterTestSuite);
         $serviceCaller->setParameter('importOriginalData', $shouldImportOriginalData);
         $serviceCaller->setParameter('originalDbName', $testConfig->getOriginalDatabaseName());

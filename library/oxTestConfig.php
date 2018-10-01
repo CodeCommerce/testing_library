@@ -566,6 +566,16 @@ class oxTestConfig
     }
 
     /**
+     * Name of the original database
+     *
+     * @return string|null
+     */
+    public function getCreateClone()
+    {
+        return (bool)$this->getValue('createclone');
+    }
+
+    /**
      * Determine whether the current test suite is for module tests, based on testConfig
      *
      * @return boolean

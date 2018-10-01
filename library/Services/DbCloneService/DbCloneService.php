@@ -39,21 +39,21 @@ class DbCloneService implements ShopServiceInterface
      */
     public function init($request)
     {
+        $dumpPrefix = $request->getParameter('dump-prefix');
+        $origDbName = $request->getParameter('originalDbName');
+        $dbCloneName = $request->getParameter('dbCloneName');
+
+        $this->dbHandler->setDbCloneName($dbCloneName);
+
+        $this->dropDatabaseCloneIfExists($dbCloneName);
+        $this->dbHandler->createDatabase($dbCloneName);
+
+        $_ENV['TESTING'] = true;
+        $_ENV['DBCLONENAME'] = $dbCloneName;
+        $this->shopConfig = new oxConfigFile($this->serviceConfig->getShopDirectory() . "config.inc.php");
+        oxRegistry::set('oxConfigFile', $this->shopConfig);
+
         if ($request->getParameter('createClone')) {
-            $dumpPrefix = $request->getParameter('dump-prefix');
-            $origDbName = $request->getParameter('originalDbName');
-            $dbCloneName = $request->getParameter('dbCloneName');
-
-            $this->dbHandler->setDbCloneName($dbCloneName);
-
-            $this->dropDatabaseCloneIfExists($dbCloneName);
-            $this->dbHandler->createDatabase($dbCloneName);
-
-            $_ENV['TESTING'] = true;
-            $_ENV['DBCLONENAME'] = $dbCloneName;
-            $this->shopConfig = new oxConfigFile($this->serviceConfig->getShopDirectory() . "config.inc.php");
-            oxRegistry::set('oxConfigFile', $this->shopConfig);
-
             if ($request->getParameter('importOriginalData')) {
                 $this->dbHandler->dumpDB($dumpPrefix);
                 $this->dbHandler->import($this->dbHandler->getTemporaryFolder() . $dumpPrefix . '_' . $origDbName);
